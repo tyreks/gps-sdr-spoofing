@@ -11,7 +11,7 @@ def retrieve_gnss_file():
     """
     """
     # date retrieving
-    TODAY = datetime.today()
+    TODAY = datetime.datetime.today()
     YEAR = TODAY.strftime("%Y")
     DAY_OF_YEAR = TODAY.strftime("%j")
     YEAR_2_LAST_DIGITS = TODAY.strftime("%y")
