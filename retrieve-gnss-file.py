@@ -21,7 +21,7 @@ def retrieve_gnss_file():
     TMP_GPS_FILE="brdc"+DAY_OF_YEAR+"0."+YEAR_2_LAST_DIGITS+"n.gz"    
     FINAL_GPS_FILE="gps_data.n"
 
-    # email, used as a password for     ftps download
+    # email, used as a password for the ftps download
     EMAIL="tyreks@hotmail.fr"
 
     # remote NASA host
