@@ -3,10 +3,14 @@
 
 
 def spoof_gps():
+    """
+    """
     return 0
 
 
 def main():
+    """
+    """
     spoof_gps()
     return 0
 

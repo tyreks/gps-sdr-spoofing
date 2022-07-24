@@ -10,7 +10,6 @@ import datetime
 from logging import error
 import subprocess
 
-
 GPS_SDR_SIM = "../../sdr/gps-sdr-sim/gps-sdr-sim"
 INPUT_EPHEM_FILE="gps_data.n"
 SAMPLE_FREQ="2600000"

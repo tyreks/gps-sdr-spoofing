@@ -9,6 +9,7 @@ from ftplib import FTP_TLS
 
 def retrieve_gnss_file():
     """
+    retrieve the most recent GNSS daily file from the NASA site
     """
     # date retrieving
     TODAY = datetime.datetime.today()
