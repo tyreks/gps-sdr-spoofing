@@ -20,11 +20,12 @@ DURATION = "30"
 #LOCATION=`cat $1`
 
 class GpsDataGenerator:
-    def generate_gps_data():
+    def generate_gps_data(date=DATE, input_ephem_file=INPUT_EPHEM_FILE
+        ,bits=BITS, sample_freq=SAMPLE_FREQ, location=LOCATION, duration=DURATION):
         try:
             #progress = log.progress(log_str)
-            subprocess.run([GPS_SDR_SIM, "-t", DATE, "-e", INPUT_EPHEM_FILE
-                , "-b", BITS, "-s", SAMPLE_FREQ, "-l", LOCATION, "-d", DURATION, "-t", DATE]
+            subprocess.run([GPS_SDR_SIM, "-t", date, "-e", input_ephem_file
+                , "-b", bits, "-s", sample_freq, "-l", location, "-d", duration]
                 , capture_output=False)
         except Exception as e:
             #progress.failure(e.traceback.format_exc())
