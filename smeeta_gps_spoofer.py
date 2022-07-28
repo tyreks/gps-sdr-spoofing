@@ -23,11 +23,11 @@ class SmeetaGpsSpoofer(object):
         if not (self.retrieve or self.generate or self.transmit):
             retriever = gdr.GnssDataRetriever()
             generator = gdg.GpsDataGenerator()
-            transmitter = ""#sst
+            transmitter = sst.SpoofedSignalTransmitter()
 
-            #retriever.retrieve_gnss_file()
+            retriever.retrieve_gnss_file()
             generator.generate_gps_data()
-            #transmitter.transmit()
+            transmitter.transmit()
 
         else :
             if self.retrieve:
@@ -39,8 +39,8 @@ class SmeetaGpsSpoofer(object):
                 generator.generate_gps_data()
             
             if self.transmit:
-                transmitter = ""#sst.SpoofedSignalTransmitter()
-                #transmitter.transmit()
+                transmitter = sst.SpoofedSignalTransmitter()
+                transmitter.transmit()
 
 
 

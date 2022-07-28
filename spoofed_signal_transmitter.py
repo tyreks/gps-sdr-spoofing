@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-from ntpath import realpath
 import subprocess
 
 
@@ -15,7 +14,7 @@ class SpoofedSignalTransmitter(object):
 
     def __init__(self, bin_file=BIN_FILE, freq=FREQ
         , sample_rate=SAMPLE_RATE, enable_ampl=ENABLE_AMPL
-        , gain=GAIN, repeat=False):
+        , gain=GAIN, repeat="-R"):
         """
         """
         self.bin_file = bin_file
@@ -31,14 +30,13 @@ class SpoofedSignalTransmitter(object):
         """
         """
         try:
-            #progress = log.progress(log_str)
             subprocess.run(["hackrf_transfer", "-t", self.bin_file
                 , "-f", self.freq, "-s", self.sample_rate
                 , "-a", self.enable_ampl, "-x", self.gain, self.repeat]
                 , capture_output=False)
         except Exception as e:
-            #progress.failure(e.traceback.format_exc())
-            print("\nError during the spoofed signal transmission :\n"+format(e)+"\n\n")
+            print("\nError during the spoofed signal transmission :\n"
+                +format(e)+"\n\n")
             return 1
 
 
