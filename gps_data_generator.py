@@ -14,7 +14,6 @@ LOCATION="35.504452495375716,11.057292641491118,100"
 DURATION = "30"
 
 class GpsDataGenerator(object):
-    print (DATE)
 
     def __init__(self, date=DATE, input_ephem_file=INPUT_EPHEM_FILE
         ,bits=BITS, sample_freq=SAMPLE_FREQ, location=LOCATION, duration=DURATION):
