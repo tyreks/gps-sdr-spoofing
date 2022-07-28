@@ -2,5 +2,5 @@
 **/*.n
 **/*.zip
 **/*.gz
-**/pycache
-**/pycache/*
+**/__pycache__
+**/__pycache__/*
