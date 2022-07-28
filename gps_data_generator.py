@@ -30,7 +30,6 @@ class GpsDataGenerator(object):
     def generate_gps_data(self):
         """
         """
-        print(self.bits)
         try:
             subprocess.run([GPS_SDR_SIM, "-t", self.date, "-e"
                 , self.input_ephem_file, "-b", self.bits, "-s"

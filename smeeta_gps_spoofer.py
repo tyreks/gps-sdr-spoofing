@@ -6,6 +6,44 @@ import gps_data_generator as gdg
 import spoofed_signal_transmitter as sst
 
 
+class SmeetaGpsSpoofer(object):
+
+    def __init__(self, retrieve=False, generate=False
+        , transmit=False):
+        """
+        """
+        self.retrieve = retrieve
+        self.generate = generate
+        self.transmit = transmit
+
+
+    def spoof(self):
+        """
+        """
+        if not (self.retrieve or self.generate or self.transmit):
+            retriever = gdr.GnssDataRetriever()
+            generator = gdg.GpsDataGenerator()
+            transmitter = ""#sst
+
+            #retriever.retrieve_gnss_file()
+            generator.generate_gps_data()
+            #transmitter.transmit()
+
+        else :
+            if self.retrieve:
+                retriever = gdr.GnssDataRetriever()
+                retriever.retrieve_gnss_file()
+
+            if self.generate:
+                generator = gdg.GpsDataGenerator()
+                generator.generate_gps_data()
+            
+            if self.transmit:
+                transmitter = ""#sst.SpoofedSignalTransmitter()
+                #transmitter.transmit()
+
+
+
 def get_parser() -> argparse.ArgumentParser:
     """
     """       
@@ -30,19 +68,10 @@ def main() -> int:
     """
     args = get_parser().parse_args()
 
-    if not args.retrieve and not args.generate and not args.transmit:
-        gdr.GnssDataRetriever.retrieve_gnss_file()
-        gdg.GpsDataGenerator.generate_gps_data()
-        sst.SpoofedSignalTransmitter.transmit()
+    spoofer = SmeetaGpsSpoofer(args.retrieve, args.generate
+        , args.transmit)
 
-    if args.retrieve:
-        gdr.GnssDataRetriever.retrieve_gnss_file()
-
-    if args.generate:
-        gdg.GpsDataGenerator.generate_gps_data()
-    
-    if args.transmit:
-        sst.SpoofedSignalTransmitter.transmit()
+    spoofer.spoof()
 
     return 0
 

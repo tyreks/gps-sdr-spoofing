@@ -8,7 +8,7 @@ from ftplib import FTP_TLS
 
 class GnssDataRetriever() :
 
-    def retrieve_gnss_file():
+    def retrieve_gnss_file(self):
         """
         retrieve the most recent GNSS daily file from the NASA site
         """
