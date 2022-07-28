@@ -10,7 +10,7 @@ import datetime
 from logging import error
 import subprocess
 
-GPS_SDR_SIM = "../../sdr/gps-sdr-sim/gps-sdr-sim"
+GPS_SDR_SIM = "../gps-sdr-sim/gps-sdr-sim"
 INPUT_EPHEM_FILE="gps_data.n"
 SAMPLE_FREQ="2600000"
 DATE=datetime.datetime.today().strftime("%Y/%m/%d,07:%M:%S")
