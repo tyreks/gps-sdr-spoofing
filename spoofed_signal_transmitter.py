@@ -9,6 +9,7 @@ import subprocess
 class SpoofedSignalTransmitter(object):
     """
     """
+    
     def __init__(self, bin_file=None, frequency=None
         , sample_rate=None, enable_ampl=None
         , gain=None, repeat=None):
