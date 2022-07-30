@@ -1,17 +1,36 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 
 import os
 import datetime
 import gzip
 import shutil
 from ftplib import FTP_TLS
+from configparser import ConfigParser
 
-class GnssDataRetriever() :
+
+class GnssDataRetriever(object) :
+    
+    # remote NASA host
+    host : str
+
+    def __init__(self, host=None, mail=None) -> None:
+        """
+        """
+        parser = ConfigParser()
+        parser.read("config_spoofer.ini")
+        self.host = host if host != None else parser["RETRIEVER"]["HOST"]
+        self.mail = mail if mail != None else parser["RETRIEVER"]["MAIL"]
+        
 
     def retrieve_gnss_file(self):
         """
         retrieve the most recent GNSS daily file from the NASA site
         """
+ 
+        # remote NASA host
+
         # date retrieving
         TODAY = datetime.datetime.today()
         YEAR = TODAY.strftime("%Y")
@@ -25,15 +44,12 @@ class GnssDataRetriever() :
         # email, used as a password for the ftps download
         EMAIL="tyreks@hotmail.fr"
 
-        # remote NASA host
-        HOST="gdc.cddis.eosdis.nasa.gov"
-
+     
         # ftp remote directory
         DIRECTORY = "gnss/data/daily/"+YEAR+"/"+DAY_OF_YEAR+"/"+YEAR_2_LAST_DIGITS+"n/"
 
-
         # latest gps data file retrieving from NASA site
-        ftps = FTP_TLS(host = HOST)
+        ftps = FTP_TLS(host = self.host)
         ftps.login(user="anonymous", passwd=EMAIL)
         ftps.prot_p()
         ftps.cwd(DIRECTORY)
@@ -51,9 +67,9 @@ class GnssDataRetriever() :
         return 0
 
 
-
 def main():
-    GnssDataRetriever.retrieve_gnss_file()
+    retriever = GnssDataRetriever()
+    retriever.retrieve_gnss_file()
     return 0
 
 if __name__ == "__main__":
