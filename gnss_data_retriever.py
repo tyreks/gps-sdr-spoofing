@@ -19,10 +19,10 @@ class GnssDataRetriever(object) :
         """
         """
         parser = ConfigParser()
-        parser.read("config_spoofer.ini")
+        parser.read("config_gps_spoofer.ini")
         self.host = host if host != None else parser["RETRIEVER"]["HOST"]
         self.mail = mail if mail != None else parser["RETRIEVER"]["MAIL"]
-        
+
 
     def retrieve_gnss_file(self):
         """

@@ -1,29 +1,39 @@
 #!/usr/bin/env python3
 
 import argparse
+from configparser import ConfigParser
 import subprocess
 
 
-BIN_FILE = "gpssim.bin"
-FREQ = "1575420000"
-SAMPLE_RATE = "2600000"
-ENABLE_AMPL = "1"
-GAIN = "0"
-
 class SpoofedSignalTransmitter(object):
-
-    def __init__(self, bin_file=BIN_FILE, freq=FREQ
-        , sample_rate=SAMPLE_RATE, enable_ampl=ENABLE_AMPL
-        , gain=GAIN, repeat="-R"):
+    """
+    """
+    def __init__(self, bin_file=None, frequency=None
+        , sample_rate=None, enable_ampl=None
+        , gain=None, repeat=None):
         """
         """
-        self.bin_file = bin_file
-        self.freq = freq
-        self.sample_rate = sample_rate
-        self.enable_ampl = enable_ampl
-        self.gain = gain
-        self.repeat = repeat
 
+        parser = ConfigParser()
+        parser.read("config_gps_spoofer.ini")
+
+        self.bin_file = bin_file if bin_file != None \
+            else parser["TRANSMITTER"]["BIN_FILE"]
+
+        self.frequency = frequency if frequency != None \
+            else parser["TRANSMITTER"]["FREQUENCY"]
+
+        self.sample_rate = sample_rate if sample_rate != None \
+            else parser["TRANSMITTER"]["SAMPLE_RATE"]
+            
+        self.enable_ampl = enable_ampl if enable_ampl != None \
+            else parser["TRANSMITTER"]["ENABLE_AMPL"]
+
+        self.gain = gain if gain != None \
+            else parser["TRANSMITTER"]["GAIN"]
+
+        self.repeat = repeat if repeat != None \
+            else parser["TRANSMITTER"]["REPEAT"]
 
 
     def transmit(self):
@@ -31,7 +41,7 @@ class SpoofedSignalTransmitter(object):
         """
         try:
             subprocess.run(["hackrf_transfer", "-t", self.bin_file
-                , "-f", self.freq, "-s", self.sample_rate
+                , "-f", self.frequency, "-s", self.sample_rate
                 , "-a", self.enable_ampl, "-x", self.gain, self.repeat]
                 , capture_output=False)
         except Exception as e:
@@ -46,19 +56,24 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         add_help=True, description="Transmit the spoofed GPS signal.")
 
-    parser.add_argument("-t", dest="bin_file", default=BIN_FILE
+    parser.add_argument("-t", dest="bin_file"
         , help="The binary file generated from the last retrieved"\
         " GNSS data file.")
-    parser.add_argument("-f", dest="freq", default=FREQ
+
+    parser.add_argument("-f", dest="frequency"
         , help="The frequency of the GPS signal.")
-    parser.add_argument("-s", dest="sample_rate", default=SAMPLE_RATE
+
+    parser.add_argument("-s", dest="sample_rate"
         , help="Sample frequency (Hz)")
-    parser.add_argument("-a", dest="enable_ampl", default=ENABLE_AMPL
+
+    parser.add_argument("-a", dest="enable_ampl"
         , help="Enable amplification (0 or 1)")
-    parser.add_argument("-x", dest="gain", default=GAIN
+
+    parser.add_argument("-x", dest="gain"
         , help="Gain (dB)")
+
     parser.add_argument(
-        "-R", action='store_const', const="-R", default=""
+        "-R", "--repeat", action='store_const', const="-R", default=""
         , help="Send the signal repeatedly.")
 
     return parser
@@ -70,9 +85,10 @@ def main() ->int:
     args = get_parser().parse_args()
 
     transmitter = SpoofedSignalTransmitter(bin_file=args.bin_file
-        , freq=args.freq, sample_rate=args.sample_rate
+        , frequency=args.frequency, sample_rate=args.sample_rate
         , enable_ampl=args.enable_ampl, gain=args.gain
-        , repeat=args.R) 
+        , repeat=args.repeat)
+        
     transmitter.transmit()
 
     return 0
