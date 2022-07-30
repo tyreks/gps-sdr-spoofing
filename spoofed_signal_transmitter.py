@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import argparse
 from configparser import ConfigParser
@@ -88,7 +89,7 @@ def main() ->int:
         , frequency=args.frequency, sample_rate=args.sample_rate
         , enable_ampl=args.enable_ampl, gain=args.gain
         , repeat=args.repeat)
-        
+
     transmitter.transmit()
 
     return 0
