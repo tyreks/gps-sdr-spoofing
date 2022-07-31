@@ -19,7 +19,6 @@ class SmeetaGpsSpoofer(object):
         self.transmit = transmit
         self.location = location
 
-
     def spoof(self):
         """
         """
@@ -27,11 +26,12 @@ class SmeetaGpsSpoofer(object):
             if not (self.retrieve or self.generate or self.transmit):
 
                 if (self.location == None):
-                    raise Exception ("Required argument : -l LOCATION \n"\
-                    "It has to be specified for the full gps spoofing processing")
+                    raise Exception ("The argument : '-l <LOCATION>' has to be specified"\
+                        " for the full gps spoofing processing.")
+                
 
                 retriever = gdr.GnssDataRetriever()
-                generator = gdg.GpsDataGenerator()
+                generator = gdg.GpsDataGenerator(location=self.location)
                 transmitter = sst.SpoofedSignalTransmitter()
 
                 retriever.retrieve_gnss_file()
@@ -45,9 +45,9 @@ class SmeetaGpsSpoofer(object):
 
                 if self.generate:
                     if (self.location == None):
-                        raise Exception ("Required argument : -l LOCATION \n"\
-                        "It has to be specified for the gps data file generation")
-                    generator = gdg.GpsDataGenerator()
+                        raise Exception ("The argument : '-l <LOCATION>' has to be specified"\
+                            " for the gps data file generation.")
+                    generator = gdg.GpsDataGenerator(location=self.location)
                     generator.generate_gps_data()
                 
                 if self.transmit:
@@ -68,15 +68,15 @@ def get_parser() -> argparse.ArgumentParser:
             " binary and transmit it to spoof the real GPS signal.")
 
     parser.add_argument(
-        "--retrieve", action='store_const', const=True, default=False
+        "-r", "--retrieve", action='store_const', const=True, default=False
         , help="Retrieve the most recent daily GNSS data file from the NASA site.")
 
     parser.add_argument(
-        "--generate", action='store_const', const=True, default=False
+        "-g", "--generate", action='store_const', const=True, default=False
         , help="Generate the binary GPS data from the local GNSS file.")
 
     parser.add_argument(
-        "--transmit", action='store_const', const=True, default=False
+        "-t", "--transmit", action='store_const', const=True, default=False
         , help="Transmit the GPS signal from the local binary GPS data.")
 
     parser.add_argument("-l", dest="location"
@@ -88,12 +88,18 @@ def get_parser() -> argparse.ArgumentParser:
 def main() -> int:
     """
     """
-    args = get_parser().parse_args()
+    try:
+        args = get_parser().parse_args()
 
-    spoofer = SmeetaGpsSpoofer(args.retrieve, args.generate
-        , args.transmit, args.location)
+        spoofer = SmeetaGpsSpoofer(retrieve=args.retrieve
+            , generate=args.generate, transmit=args.transmit
+            , location=args.location)
 
-    spoofer.spoof()
+        spoofer.spoof()
+
+    except Exception as exc:
+        print (format(exc))
+        sys.exit(1)
 
     return 0
 

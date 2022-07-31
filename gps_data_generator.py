@@ -4,7 +4,9 @@
 import argparse
 from configparser import ConfigParser
 import datetime
+import re
 import subprocess
+import sys
 
 class GpsDataGenerator(object):
 
@@ -12,8 +14,15 @@ class GpsDataGenerator(object):
         ,bits=None, sample_rate=None, location=None, duration=None):
         """
         """
+
+        self.location = self.validateLocation(location)
+        
+
+
         parser = ConfigParser()
         parser.read("config_gps_spoofer.ini")
+
+        self.gps_sdr_sim = parser["GENERATOR"]["GPS_SDR_SIM"]
 
         self.input_ephem_file = input_ephem_file \
             if input_ephem_file != None \
@@ -31,9 +40,27 @@ class GpsDataGenerator(object):
         self.date = date if date != None\
             else datetime.datetime.today().strftime("%Y/%m/%d,07:%M:%S")
 
-        self.location = location
 
-        self.gps_sdr_sim = parser["GENERATOR"]["GPS_SDR_SIM"]
+    @staticmethod
+    def validateLocation(location:str) -> str:
+
+        resLocation = location
+
+        regexCoords = "^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*"\
+            "[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)"\
+            "(,[0-9]+)?$"
+        
+        regexFilePath = "^(.+)\/([^\/]+)$"
+            
+        if re.match(regexFilePath, location):
+            with open(location) as loc_file:
+                resLocation = loc_file.readline()
+            loc_file.close()
+        
+        if not re.match(regexCoords, resLocation):
+            raise ValueError("Invalid location : "+resLocation)
+
+        return resLocation
 
 
     def generate_gps_data(self):
@@ -80,14 +107,19 @@ def get_parser() -> argparse.ArgumentParser:
 def main():
     """
     """
-    args = get_parser().parse_args()
+    try:
+        args = get_parser().parse_args()
 
-    my_generator = GpsDataGenerator(date=args.date
-        , input_ephem_file=args.input_ephem_file, bits=args.bits
-        , sample_rate=args.sample_rate, location=args.location
-        , duration=args.duration)
+        my_generator = GpsDataGenerator(date=args.date
+            , input_ephem_file=args.input_ephem_file, bits=args.bits
+            , sample_rate=args.sample_rate, location=args.location
+            , duration=args.duration)
 
-    my_generator.generate_gps_data()
+        my_generator.generate_gps_data()
+        
+    except Exception as exc:
+        print (format(exc))
+        sys.exit(1)
 
     return 0
 
