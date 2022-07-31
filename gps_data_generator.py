@@ -6,9 +6,6 @@ from configparser import ConfigParser
 import datetime
 import subprocess
 
-
-#LOCATION="35.504452495375716,11.057292641491118,100"
-
 class GpsDataGenerator(object):
 
     def __init__(self, date=None, input_ephem_file=None
@@ -48,9 +45,8 @@ class GpsDataGenerator(object):
                 , self.sample_rate, "-l", self.location, "-d"
                 , self.duration], capture_output=False)
         except Exception as e:
-            print("\nError during GPS data generation :\n"+format(e)+"\n\n")
-            return 1
-        return 0
+            raise Exception ("\nError during GPS data generation :\n"+format(e)+"\n\n")
+            
 
 
 def get_parser() -> argparse.ArgumentParser:
