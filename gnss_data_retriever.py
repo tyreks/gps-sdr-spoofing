@@ -8,6 +8,7 @@ import gzip
 import shutil
 from ftplib import FTP_TLS
 from configparser import ConfigParser
+import sys
 
 
 class GnssDataRetriever(object) :
@@ -68,8 +69,12 @@ class GnssDataRetriever(object) :
 
 
 def main():
-    retriever = GnssDataRetriever()
-    retriever.retrieve_gnss_file()
+    try:
+        retriever = GnssDataRetriever()
+        retriever.retrieve_gnss_file()
+    except Exception as exc:
+        print (format(exc))
+        sys.exit(1)
     return 0
 
 if __name__ == "__main__":
